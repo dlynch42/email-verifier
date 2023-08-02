@@ -51,13 +51,18 @@ fun main(): Unit = runBlocking {
     val registrationNotificationQueue = RabbitQueue("registration-notification")
     val registrationRequestExchange = RabbitExchange(
         // TODO - rename the request exchange (since you've already declared a direct exchange under the current name)
-        name = "registration-request-exchange",
+        name = "registration-request-consistent-hash-exchange",
+        
         // TODO - use a consistent hash exchange (x-consistent-hash)
-        type = "direct",
+        type = "x-consistent-hash",
+
         // TODO - calculate a routing key based on message content
-        routingKeyGenerator = @Suppress("UNUSED_ANONYMOUS_PARAMETER") { message: String -> "42" },
+        // routingKeyGenerator = @Suppress("UNUSED_ANONYMOUS_PARAMETER") { message: String -> "42" },
+        routingKeyGenerator = { message: String -> message.hashCode().toString() },
+
         // TODO - read the binding key from the environment
-        bindingKey = "42",
+        // bindingKey = "42",
+        bindingKey = System.getenv("BINDING_KEY") ?: "",
     )
 
     // TODO - read the queue name from the environment

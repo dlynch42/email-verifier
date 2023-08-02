@@ -49,6 +49,22 @@ class Benchmark(
         }.also { duration ->
             stop()
             logger.info("benchmark finished in $duration")
+
+            // TODO
+            // Calculate registration/second
+            var regSec = metrics.counter("registration - success").count.toDouble() / duration.inWholeMilliseconds * 1000
+            regSec = String.format("%.2f", regSec).toDouble()
+
+            // Log calculated registrations/second
+            logger.info("registration/second: $regSec")
+
+            val targetRegSec = 150  // was getting ~141 on my machine; intentionally trying to fail
+            if (regSec < targetRegSec) {
+                // Log failure message
+                logger.info("registration/second is less than $targetRegSec")
+            } else {
+                logger.info("Test Successful")
+            }
         }
     }
 
