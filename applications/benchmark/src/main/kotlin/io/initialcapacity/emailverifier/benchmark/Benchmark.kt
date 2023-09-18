@@ -50,7 +50,6 @@ class Benchmark(
             stop()
             logger.info("benchmark finished in $duration")
 
-            // TODO
             // Calculate registration/second
             var regSec = metrics.counter("registration - success").count.toDouble() / duration.inWholeMilliseconds * 1000
             regSec = String.format("%.2f", regSec).toDouble()
